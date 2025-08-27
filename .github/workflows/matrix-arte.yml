@@ -1,4 +1,4 @@
-name: CI Matrix & Artifacts
+name: Matrix et Artifacts
 
 on:
   push:
@@ -58,7 +58,7 @@ jobs:
           if-no-files-found: error
 
   conditional-job:
-    name: Conditional Deploy (Ubuntu + Node 18 only)
+    name: Conditional Deploy
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -75,5 +75,4 @@ jobs:
 
       - name: Simulate deploy
         run: |
-          echo "Simulating deployment of Ubuntu + Node 18 build..."
-          echo "(Here you would run your real deployment script.)"
+          echo "I WANT TO BREAK FREE!"
