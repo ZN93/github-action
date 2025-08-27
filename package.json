@@ -2,9 +2,11 @@
   "name": "github-action",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p dist && echo 'Build réussi !' > dist/output.txt"
+    "start": "node index.js",
+    "build": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -13,12 +15,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/ZN93/github-action/issues"
   },
   "homepage": "https://github.com/ZN93/github-action#readme",
   "description": ""
 }
-
-
