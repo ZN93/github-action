@@ -1,0 +1,14 @@
+name: After PR Merged
+
+on:
+  workflow_run:
+    workflows: ["PR Merged Message"]
+    types:
+      - completed
+
+jobs:
+  follow_up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Message
+        run: echo "workflow précédent terminé"

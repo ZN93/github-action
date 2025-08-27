@@ -13,7 +13,7 @@ jobs:
     steps:
       - run: echo "$PUSH"
 
-  job-pr:
+  job-pull:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
