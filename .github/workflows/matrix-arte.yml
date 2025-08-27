@@ -1,0 +1,79 @@
+name: CI Matrix & Artifacts
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 2
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        node: [ 16, 18, 20 ]
+        exclude:
+          - os: ubuntu-latest
+            node: 16
+          - os: windows-latest
+            node: 18
+          - os: macos-latest
+            node: 20
+        include:
+          - os: windows-latest
+            node: 22
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Build
+        run: |
+          npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.os }}-node${{ matrix.node }}
+          path: |
+            dist/**
+          if-no-files-found: error
+
+  conditional-job:
+    name: Conditional Deploy (Ubuntu + Node 18 only)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Download Ubuntu + Node 18 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-ubuntu-latest-node18
+          path: ./artifact
+
+      - name: List downloaded files
+        run: |
+          echo "Downloaded contents:" && ls -la ./artifact
+
+      - name: Simulate deploy
+        run: |
+          echo "Simulating deployment of Ubuntu + Node 18 build..."
+          echo "(Here you would run your real deployment script.)"
